@@ -1,0 +1,26 @@
+# Start Homebrew Releaser when a new tag is created
+on:
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:
+
+jobs:
+  homebrew-releaser:
+    runs-on: ubuntu-latest
+    name: homebrew-releaser
+    steps:
+      - name: Release my project to my Homebrew tap
+        uses: Justintime50/homebrew-releaser@v1
+        with:
+          homebrew_owner: ${{ github.repository_owner }}
+          homebrew_tap: homebrew-tools
+          formula_folder: Formula
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          commit_owner: ${{ secrets.HOMEBREW_RELEASER }}
+          commit_email: ${{ secrets.HOMEBREW_RELEASER_USER_EMAIL }}
+          install: 'bin.install "src/my-script.sh" => "my-script"'
+          test: 'assert_match("my script output", shell_output("my-script-command"))'
+          skip_commit: false
+          update_readme_table: true
+          debug: false
